@@ -116,8 +116,6 @@ def logout():
     flash("Logged out successfully.", "info")
     return redirect("/login")
 
-    # IMPLEMENT THIS
-
 
 ##############################################################################
 # General user routes:
