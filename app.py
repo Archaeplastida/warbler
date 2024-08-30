@@ -129,7 +129,7 @@ def list_users():
     search = request.args.get('q')
 
     if not search:
-        users = User.query.all()
+        users = User.query.order_by(User.id).all()
     else:
         users = User.query.filter(User.username.like(f"%{search}%")).all()
 
