@@ -4,7 +4,7 @@ from datetime import datetime
 from random import uniform
 
 
-def get_random_datetime(year_gap=2):
+def get_random_datetime(year_gap=17):
     """Get a random datetime within the last few years."""
 
     now = datetime.now()

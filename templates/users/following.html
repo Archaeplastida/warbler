@@ -16,6 +16,7 @@
                   <img src="{{ followed_user.image_url }}" alt="Image for {{ followed_user.username }}" class="card-image">
                   <p>@{{ followed_user.username }}</p>
                 </a>
+                {%if followed_user.id != g.user.id%}
                 {% if g.user.is_following(followed_user) %}
                   <form method="POST"
                         action="/users/stop-following/{{ followed_user.id }}">
@@ -26,9 +27,14 @@
                     <button class="btn btn-outline-primary btn-sm">Follow</button>
                   </form>
                 {% endif %}
+                {% else %}
+                <form method="GET" action="/users/{{g.user.id}}">
+                  <button class="btn btn-outline-primary btn-sm">This is you.</button>
+                </form>
+                {% endif %}
 
               </div>
-              <p class="card-bio">BIO HERE</p>
+              <p class="card-bio">{{followed_user.bio}}</p>
             </div>
           </div>
         </div>

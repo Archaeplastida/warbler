@@ -18,9 +18,9 @@ USERS_CSV_HEADERS = ['email', 'username', 'image_url', 'password', 'bio', 'heade
 MESSAGES_CSV_HEADERS = ['text', 'timestamp', 'user_id']
 FOLLOWS_CSV_HEADERS = ['user_being_followed_id', 'user_following_id']
 
-NUM_USERS = 300
-NUM_MESSAGES = 1000
-NUM_FOLLWERS = 5000
+NUM_USERS = 10000
+NUM_MESSAGES = 33000
+NUM_FOLLWERS = 150000
 
 fake = Faker()
 
@@ -35,8 +35,8 @@ image_urls = [
 # Generate random header image URLs to use for users
 
 header_image_urls = [
-    requests.get(f"http://www.splashbase.co/api/v1/images/{i}").json()['url']
-    for i in range(1, 46)
+    requests.get('https://picsum.photos/1441/525').url
+    for i in range(1, 256)
 ]
 
 with open('generator/users.csv', 'w') as users_csv:
