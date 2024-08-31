@@ -1,0 +1,38 @@
+{% extends 'users/detail.html' %}
+{% block user_details %}
+<div class="col-sm-6">
+    <ul class="list-group" id="messages">
+        {%if messages%}
+        <h2>Recently Liked</h2>
+        {%else%}
+        <h2>No Likes Yet.</h2>
+        {%endif%}
+
+        <!-- You need to work on the feature that displays all of the liked messages. -->
+
+        {% for message in messages %}
+
+        <li class="list-group-item">
+            <a href="/messages/{{ message.id }}" class="message-link" />
+
+            <a href="/users/{{ message.user_id }}">
+                <img src="{{ liked_user(message.user_id).image_url }}" alt="user image" class="timeline-image">
+            </a>
+
+            <div class="message-area">
+                <a href="/users/{{ message.user_id }}">@{{ liked_user(message.user_id).username }}</a>
+                <span class="text-muted">{{ message.timestamp.strftime('%d %B %Y') }}</span>
+                <p style="white-space: pre-line;">{{ message.text }}</p>
+            </div>
+            <form method="POST" action="/users/remove_like/{{message.id}}" id="messages-form">
+                <button class="btn btn-sm btn-primary">
+                    <i class="fa fa-thumbs-up"></i>
+                </button>
+            </form>
+        </li>
+
+        {% endfor %}
+
+    </ul>
+</div>
+{% endblock %}
