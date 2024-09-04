@@ -52,7 +52,7 @@ class MessageViewTestCase(TestCase):
         db.session.commit()
 
     def test_add_message(self):
-        """Can use add a message?"""
+        """Can user add a message?"""
 
         # Since we need to change the session to mimic logging in,
         # we need to use the changing-session trick:
@@ -71,3 +71,55 @@ class MessageViewTestCase(TestCase):
 
             msg = Message.query.one()
             self.assertEqual(msg.text, "Hello")
+
+    def test_message_visiblity_after_adding_message(self):
+        """Is the text displayed on the message, via HTML?"""
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess[CURR_USER_KEY] = self.testuser.id
+            
+            my_inputted_text = "Hello, please test me out!"
+
+            resp = c.post("/messages/new", data={"text": my_inputted_text}, follow_redirects=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn(my_inputted_text, resp.get_data().decode())
+
+    def test_view_message(self):
+        """Is the text on the message displayed in the message closeup, via HTML?"""
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess[CURR_USER_KEY] = self.testuser.id
+            
+            my_inputted_text = "Hello, view me right now!"
+
+            c.post("/messages/new", data={"text": my_inputted_text}, follow_redirects=True)
+            msg_id = Message.query.filter_by(user_id = self.testuser.id).first().id #Retriving message id.
+            
+            html = c.get(f"/messages/{msg_id}")
+
+            self.assertIn(html.status_code, 200)
+            self.assertIn(my_inputted_text, html.get_data().decode())
+
+    def test_delete_message(self):
+        """Will the message get removed and not appear on the user page anymore?"""
+        
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess[CURR_USER_KEY] = self.testuser.id
+            
+            my_inputted_text = "Hello, view me right now!"
+
+            resp = c.post("/messages/new", data={"text": my_inputted_text}, follow_redirects=True)
+            
+            self.assertIn(my_inputted_text, resp.get_data().decode()) #Confirming that the message exists, before we try deleting it.
+            msg_id = Message.query.filter_by(user_id = self.testuser.id).first().id #Retriving message id.
+
+            self.assertIn(resp.status_code, 200)
+
+            resp2 = c.post(f"/messages/{msg_id}/delete", follow_redirects=True)
+            self.assertNotIn(my_inputted_text, resp2.get_data().decode())
+
+            self.assertIn(resp2.status_code, 200)
