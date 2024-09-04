@@ -34,7 +34,7 @@ app.config['WTF_CSRF_ENABLED'] = False
 
 
 class MessageViewTestCase(TestCase):
-    """Test views for messages."""
+    """Test views for message."""
 
     def setUp(self):
         """Create test client, add sample data."""
@@ -97,10 +97,10 @@ class MessageViewTestCase(TestCase):
 
             c.post("/messages/new", data={"text": my_inputted_text}, follow_redirects=True)
             msg_id = Message.query.filter_by(user_id = self.testuser.id).first().id #Retriving message id.
-            
+
             html = c.get(f"/messages/{msg_id}")
 
-            self.assertIn(html.status_code, 200)
+            self.assertEqual(html.status_code, 200)
             self.assertIn(my_inputted_text, html.get_data().decode())
 
     def test_delete_message(self):
@@ -117,9 +117,9 @@ class MessageViewTestCase(TestCase):
             self.assertIn(my_inputted_text, resp.get_data().decode()) #Confirming that the message exists, before we try deleting it.
             msg_id = Message.query.filter_by(user_id = self.testuser.id).first().id #Retriving message id.
 
-            self.assertIn(resp.status_code, 200)
+            self.assertEqual(resp.status_code, 200)
 
             resp2 = c.post(f"/messages/{msg_id}/delete", follow_redirects=True)
             self.assertNotIn(my_inputted_text, resp2.get_data().decode())
 
-            self.assertIn(resp2.status_code, 200)
+            self.assertEqual(resp2.status_code, 200)
