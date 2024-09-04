@@ -8,7 +8,7 @@
 import os
 from unittest import TestCase
 
-from models import db, User, Message, Follows
+from models import db, User, Follows
 
 # BEFORE we import our app, let's set an environmental variable
 # to use a different database for tests (we need to do this
@@ -30,13 +30,12 @@ db.create_all()
 
 
 class UserModelTestCase(TestCase):
-    """Test views for messages."""
+    """Test views for User Model."""
 
     def setUp(self):
         """Create test client, add sample data."""
 
         User.query.delete()
-        Message.query.delete()
         Follows.query.delete()
 
         self.client = app.test_client()
